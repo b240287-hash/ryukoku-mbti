@@ -2,47 +2,45 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>ゼミスタイル診断</title>
+<title>ゼミスタイル診断｜龍谷大学</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body {
-  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
-  background: #f8f5f1;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f7f5f2;
   margin: 0;
-  padding: 24px;
-  color: #2e2e2e;
+  padding: 20px;
 }
 
 .box {
   background: #ffffff;
   padding: 28px;
-  border-radius: 14px;
-  max-width: 520px;
+  border-radius: 16px;
+  max-width: 540px;
   margin: auto;
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
   text-align: center;
 }
 
-h1 {
-  font-size: 26px;
-  letter-spacing: 0.05em;
-}
+h1 { font-size: 24px; margin-bottom: 12px; }
+h2 { font-size: 20px; margin-bottom: 12px; }
 
-h2 {
-  font-size: 18px;
-  margin-bottom: 10px;
+p {
+  font-size: 16px;
+  line-height: 1.7;
 }
 
 button {
   width: 100%;
   padding: 16px;
-  margin-top: 14px;
+  margin-top: 12px;
   font-size: 16px;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   background: #7b1e24; /* 龍谷えんじ */
   color: #ffffff;
+  cursor: pointer;
   font-weight: bold;
 }
 
@@ -50,54 +48,87 @@ button:hover {
   background: #65181d;
 }
 
-.result {
-  padding: 24px;
-  border-radius: 12px;
+.result-box {
+  padding: 26px;
+  border-radius: 16px;
   color: #ffffff;
-  border: 2px solid rgba(255,255,255,0.4);
 }
 
-.PC { background: linear-gradient(135deg,#8c2d32,#6b1f24); }
-.PA { background: linear-gradient(135deg,#7b1e24,#5a161a); }
-.BC { background: linear-gradient(135deg,#a05a2c,#7a3f1f); }
-.BA { background: linear-gradient(135deg,#4a4a4a,#2f2f2f); }
-</style>
+.PC { background: linear-gradient(135deg,#9f2d2f,#7b1e24); }
+.PA { background: linear-gradient(135deg,#7b1e24,#4b1316); }
+.BC { background: linear-gradient(135deg,#0f766e,#115e59); }
+.BA { background: linear-gradient(135deg,#334155,#1e293b); }
 
+ul {
+  text-align: left;
+  margin-top: 16px;
+  line-height: 1.7;
+}
+</style>
 </head>
 
 <body>
 
 <div class="box" id="app">
   <h1>ゼミスタイル診断</h1>
-  <p>質問に答えて、あなたに合うゼミタイプを見つけよう</p>
+  <p>
+    質問に答えることで、<br>
+    あなたに合った「ゼミの学び方タイプ」がわかります。<br>
+    <small>※龍谷大学向けオリジナル診断</small>
+  </p>
   <button onclick="start()">診断をはじめる</button>
 </div>
 
 <script>
-const questions = [
-  { text:"興味があるのは？", A:{text:"社会・人・地域",type:"P"}, B:{text:"企業・市場",type:"B"} },
-  { text:"ゼミで大事なのは？", A:{text:"話し合いの雰囲気",type:"P"}, B:{text:"成果と結論",type:"B"} },
-  { text:"関心が向くテーマは？", A:{text:"社会課題",type:"P"}, B:{text:"ビジネス課題",type:"B"} },
-  { text:"将来像に近いのは？", A:{text:"人の役に立ちたい",type:"P"}, B:{text:"成果を出したい",type:"B"} },
+ const questions = [
+  // P vs B（4問）
+  { text:"より関心があるのは？",
+    A:{text:"社会・地域・人の課題",type:"P"},
+    B:{text:"企業・ビジネス・経済",type:"B"} },
 
-  { text:"考え方のタイプは？", A:{text:"ひらめき重視",type:"C"}, B:{text:"分析重視",type:"A"} },
-  { text:"レポート作成では？", A:{text:"発想から組み立てる",type:"C"}, B:{text:"構成を固めてから",type:"A"} },
-  { text:"得意なのは？", A:{text:"アイデア出し",type:"C"}, B:{text:"データ整理",type:"A"} },
-  { text:"判断の基準は？", A:{text:"直感",type:"C"}, B:{text:"根拠",type:"A"} }
+  { text:"ゼミに求める雰囲気は？",
+    A:{text:"対話が多く温かい",type:"P"},
+    B:{text:"成果重視で引き締まっている",type:"B"} },
+
+  { text:"考え方に近いのは？",
+    A:{text:"まずやってみる",type:"P"},
+    B:{text:"仕組みを理解してから動く",type:"B"} },
+
+  { text:"チームでは？",
+    A:{text:"雰囲気づくり役",type:"P"},
+    B:{text:"進行・管理役",type:"B"} },
+
+  // C vs A（4問）
+  { text:"活動で大事なのは？",
+    A:{text:"共感・価値観",type:"C"},
+    B:{text:"根拠・データ",type:"A"} },
+
+  { text:"レポート作成は？",
+    A:{text:"自由に発想したい",type:"C"},
+    B:{text:"構成を重視したい",type:"A"} },
+
+  { text:"議論で得意なのは？",
+    A:{text:"新しい視点を出す",type:"C"},
+    B:{text:"整理してまとめる",type:"A"} },
+
+  { text:"学びで重視するのは？",
+    A:{text:"理念や背景",type:"C"},
+    B:{text:"方法や分析",type:"A"} }
 ];
 
+
 let index = 0;
-let score = {P:0,B:0,C:0,A:0};
+let score = { P:0, B:0, C:0, A:0 };
 
 function start(){
   index=0;
-  score={P:0,B:0,C:0,A:0};
-  show();
+  score={ P:0, B:0, C:0, A:0 };
+  showQuestion();
 }
 
-function show(){
-  const q = questions[index];
-  app.innerHTML = `
+function showQuestion(){
+  const q=questions[index];
+  document.getElementById("app").innerHTML=`
     <h2>Q${index+1}</h2>
     <p>${q.text}</p>
     <button onclick="answer('${q.A.type}')">${q.A.text}</button>
@@ -105,31 +136,49 @@ function show(){
   `;
 }
 
-function answer(t){
-  score[t]++;
+function answer(type){
+  score[type]++;
   index++;
-  index < questions.length ? show() : result();
+  index<questions.length?showQuestion():showResult();
 }
 
-function result(){
-  const type =
-    (score.P>=score.B?"P":"B") +
-    (score.C>=score.A?"C":"A");
+function showResult(){
+  const focus = score.P>=score.B?"P":"B";
+  const approach = score.C>=score.A?"C":"A";
+  const result = focus+approach;
 
-  const text = {
-    PC:"社会・人に関心があり、創造的に学ぶタイプ。地域・社会系ゼミ向き。",
-    PA:"人や組織を論理的に考えるタイプ。経営・組織系ゼミ向き。",
-    BC:"ビジネスを企画で広げるタイプ。マーケ・企画系ゼミ向き。",
-    BA:"数字や分析で支えるタイプ。会計・データ系ゼミ向き。"
+  const desc={
+    PC:"社会課題に関心を持ち、行動と発想で学ぶタイプ。地域連携・社会実践系ゼミ向き。",
+    PA:"人や組織を対象に、実践と分析を両立するタイプ。経営・組織系ゼミ向き。",
+    BC:"ビジネス分野で企画力を活かすタイプ。マーケティング・企画系ゼミ向き。",
+    BA:"理論とデータでビジネスを考えるタイプ。会計・経済・分析系ゼミ向き。"
   };
 
-  app.innerHTML = `
-    <div class="result ${type}">
-      <h2>Your Type</h2>
-      <h1>${type} Type</h1>
-      <p>${text[type]}</p>
+  document.getElementById("app").innerHTML=`
+    <div class="result-box ${result}">
+      <h2>診断結果</h2>
+      <h1>${result} Type</h1>
+      <p>${desc[result]}</p>
+
+      <hr style="margin:20px 0; opacity:0.4;">
+
+      <h3>診断指標について</h3>
+      <ul>
+        <li><strong>P（People / Practice）</strong><br>
+        人・社会・地域に関心があり、行動しながら学ぶタイプ</li>
+
+        <li><strong>B（Business）</strong><br>
+        企業・経済・ビジネス分野に関心が強いタイプ</li>
+
+        <li><strong>C（Creative / Concept）</strong><br>
+        発想力や理念、価値観を大切にして考えるタイプ</li>
+
+        <li><strong>A（Analytical）</strong><br>
+        データや理論をもとに論理的に考えるタイプ</li>
+      </ul>
+
+      <button onclick="start()">もう一度診断する</button>
     </div>
-    <button onclick="start()">もう一度</button>
   `;
 }
 </script>
