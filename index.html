@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ゼミスタイル診断</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  background: #f8f5f1;
+  margin: 0;
+  padding: 24px;
+  color: #2e2e2e;
+}
+
+.box {
+  background: #ffffff;
+  padding: 28px;
+  border-radius: 14px;
+  max-width: 520px;
+  margin: auto;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+h1 {
+  font-size: 26px;
+  letter-spacing: 0.05em;
+}
+
+h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+button {
+  width: 100%;
+  padding: 16px;
+  margin-top: 14px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  background: #7b1e24; /* 龍谷えんじ */
+  color: #ffffff;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #65181d;
+}
+
+.result {
+  padding: 24px;
+  border-radius: 12px;
+  color: #ffffff;
+  border: 2px solid rgba(255,255,255,0.4);
+}
+
+.PC { background: linear-gradient(135deg,#8c2d32,#6b1f24); }
+.PA { background: linear-gradient(135deg,#7b1e24,#5a161a); }
+.BC { background: linear-gradient(135deg,#a05a2c,#7a3f1f); }
+.BA { background: linear-gradient(135deg,#4a4a4a,#2f2f2f); }
+</style>
+
+</head>
+
+<body>
+
+<div class="box" id="app">
+  <h1>ゼミスタイル診断</h1>
+  <p>質問に答えて、あなたに合うゼミタイプを見つけよう</p>
+  <button onclick="start()">診断をはじめる</button>
+</div>
+
+<script>
+const questions = [
+  { text:"興味があるのは？", A:{text:"社会・人・地域",type:"P"}, B:{text:"企業・市場",type:"B"} },
+  { text:"ゼミで大事なのは？", A:{text:"話し合いの雰囲気",type:"P"}, B:{text:"成果と結論",type:"B"} },
+  { text:"関心が向くテーマは？", A:{text:"社会課題",type:"P"}, B:{text:"ビジネス課題",type:"B"} },
+  { text:"将来像に近いのは？", A:{text:"人の役に立ちたい",type:"P"}, B:{text:"成果を出したい",type:"B"} },
+
+  { text:"考え方のタイプは？", A:{text:"ひらめき重視",type:"C"}, B:{text:"分析重視",type:"A"} },
+  { text:"レポート作成では？", A:{text:"発想から組み立てる",type:"C"}, B:{text:"構成を固めてから",type:"A"} },
+  { text:"得意なのは？", A:{text:"アイデア出し",type:"C"}, B:{text:"データ整理",type:"A"} },
+  { text:"判断の基準は？", A:{text:"直感",type:"C"}, B:{text:"根拠",type:"A"} }
+];
+
+let index = 0;
+let score = {P:0,B:0,C:0,A:0};
+
+function start(){
+  index=0;
+  score={P:0,B:0,C:0,A:0};
+  show();
+}
+
+function show(){
+  const q = questions[index];
+  app.innerHTML = `
+    <h2>Q${index+1}</h2>
+    <p>${q.text}</p>
+    <button onclick="answer('${q.A.type}')">${q.A.text}</button>
+    <button onclick="answer('${q.B.type}')">${q.B.text}</button>
+  `;
+}
+
+function answer(t){
+  score[t]++;
+  index++;
+  index < questions.length ? show() : result();
+}
+
+function result(){
+  const type =
+    (score.P>=score.B?"P":"B") +
+    (score.C>=score.A?"C":"A");
+
+  const text = {
+    PC:"社会・人に関心があり、創造的に学ぶタイプ。地域・社会系ゼミ向き。",
+    PA:"人や組織を論理的に考えるタイプ。経営・組織系ゼミ向き。",
+    BC:"ビジネスを企画で広げるタイプ。マーケ・企画系ゼミ向き。",
+    BA:"数字や分析で支えるタイプ。会計・データ系ゼミ向き。"
+  };
+
+  app.innerHTML = `
+    <div class="result ${type}">
+      <h2>Your Type</h2>
+      <h1>${type} Type</h1>
+      <p>${text[type]}</p>
+    </div>
+    <button onclick="start()">もう一度</button>
+  `;
+}
+</script>
+
+</body>
+</html>
